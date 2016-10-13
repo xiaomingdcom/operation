@@ -273,60 +273,59 @@ void main()//主函数
 	int len1 = 0;
 	int len2 = 0;
 	int len = 0;
-	bool right = 1;
 	char num1[100000];
 	char num2[100000];
 	char result[100000];
 	char remainder[100000];
 	char lresult[100000];//2
 	char ope[100000];
-	for (right = 0; right == 0;) {
-		right = 1;
-		scanf("%s", &num1);
-		scanf("%s", &num2);
-		//int i;
-		//for (i = 0; i < 20000; i++) { num1[i] = '1'; }
-		//num1[20000] = '\0';
-		//for (i = 0; i < 20000; i++) { num2[i] = '1'; }
-		//num2[20000] = '\0';
-		scanf("%s", &ope);
-		len1 = check(num1);//检查,返回位数
-		len2 = check(num2);
-		if (len1 == 0 || len2 == 0) {
-			printf("error1\n");
-			right = 0;
-			continue;
-		}
-		switch (ope[0])
-		{
-		case '+': {
-			add(num1, num2, result, len1, len2);
-			printf("%s", result);
-			//free;
-			break;
-		}
-		case '-': {
-			if (len2 == 1 && num2[0] == '0') {
-				printf("error2\n");
-				right = 0;
+	while(1) {
+			scanf("%s", &num1);
+			if (num1[0] == 'c') {//输入单字符c结束程序
 				break;
 			}
-			sub(num1, num2, result, len1, len2);
-			printf("%s", result);
-			break;
-		}
-		case '*': {
-			mul(num1, num2, lresult, len1, len2);
-			printf("%s", lresult);
-			break;
-		}
-		case '/': {
-			div(num1, num2, result, remainder, len1, len2);
-			printf("%s %s", result, remainder);
-			break;
-		}
-		default:printf("error3\n");
-		}
+			scanf("%s", &num2);
+			//int i;
+			//for (i = 0; i < 20000; i++) { num1[i] = '1'; }
+			//num1[20000] = '\0';
+			//for (i = 0; i < 20000; i++) { num2[i] = '1'; }
+			//num2[20000] = '\0';
+			scanf("%s", &ope);
+			len1 = check(num1);//检查,返回位数
+			len2 = check(num2);
+			if (len1 == 0 || len2 == 0) {
+				printf("error1\n");
+				continue;
+			}
+			switch (ope[0])
+			{
+			case '+': {
+				add(num1, num2, result, len1, len2);
+				printf("%s\n", result);
+				//free;
+				break;
+			}
+			case '-': {
+				if (len2 == 1 && num2[0] == '0') {
+					printf("error2\n");
+					break;
+				}
+				sub(num1, num2, result, len1, len2);
+				printf("%s\n", result);
+				break;
+			}
+			case '*': {
+				mul(num1, num2, lresult, len1, len2);
+				printf("%s\n", lresult);
+				break;
+			}
+			case '/': {
+				div(num1, num2, result, remainder, len1, len2);
+				printf("%s %s\n", result, remainder);
+				break;
+			}
+			default:printf("error3\n");
+			}
 	}
 	system("pause");
 }
