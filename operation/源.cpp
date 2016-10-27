@@ -1,5 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include<iostream>
+using namespace std;
 void add(char*num1, char*num2, char*result, int len1, int len2);
 int sub(char*num1, char*num2, char*result, int len1, int len2);
 void mul(char*num1, char*num2, char*result, int len1, int len2);
@@ -150,7 +152,7 @@ int sub(char*num1, char*num2, char*result, int len1, int len2)//减法
 	}
 	result[len] = '\0';
 	len = throwaway0(result, len);//可优化
-	if (sign == 0) {
+	if (sign == -1) {
 		for (i = 0; i <= len; i++) {//'\0'
 			result[len - i + 1] = result[len - i];
 		}
@@ -270,54 +272,151 @@ void div(char*num1, char*num2, char*result, char*remainder, int len1, int len2) 
 
 void main()//主函数
 {
+	int i = 0;
 	int len1 = 0;
 	int len2 = 0;
 	int len = 0;
 	char num1[100000];
+	int num1sign = 1;
 	char num2[100000];
+	int num2sign = 1;
 	char result[100000];
 	char remainder[100000];
 	char lresult[100000];//2
 	char ope[100000];
 	while(1) {
-			scanf("%s", &num1);
-			if (num1[0] == 'c') {//输入单字符c结束程序
+		i = 0;
+		num1[i] = getchar();
+		if (num1[i] == EOF) {
+			cout << "end" << endl;
+			break;
+		}
+		if (num1[i] == '\n') {
+			i = 100000;
+		}
+		if(num1[i]=='+'){
+			num1sign = 1;
+		}
+		else{
+			if (num1[i] == '-') {
+				num1sign = 0;
+			}
+			else {
+				i = 1;
+			}
+		}
+		for (; i < 100000; i++) {
+			num1[i] = getchar();
+			if (num1[i] == '\n') {
 				break;
 			}
-			scanf("%s", &num2);
-			//int i;
-			//for (i = 0; i < 20000; i++) { num1[i] = '1'; }
-			//num1[20000] = '\0';
-			//for (i = 0; i < 20000; i++) { num2[i] = '1'; }
-			//num2[20000] = '\0';
-			scanf("%s", &ope);
-			len1 = check(num1);//检查,返回位数
-			len2 = check(num2);
-			if (len1 == 0 || len2 == 0) {
-				printf("error1\n");
-				continue;
+		}
+		num1[i] = '\0';
+		len1 = i;
+
+		i = 0;
+		num2[i] = getchar();
+		if (num2[i] == EOF) {
+			cout << "end" << endl;
+			break;
+		}
+		if (num2[i] == '\n') {
+			i = 100000;
+		}
+		if (num2[i] == '+') {
+			num2sign = 1;
+		}
+		else {
+			if (num2[i] == '-') {
+				num2sign = 0;
 			}
-			switch (ope[0])
-			{
+			else {
+				i = 1;
+			}
+		}
+		for (; i < 100000; i++) {
+			num2[i] = getchar();
+			if (num2[i] == '\n') {
+				break;
+			}
+		}
+		num2[i] = '\0';
+		len2 = i;
+
+		ope[0] = getchar();
+		ope[1] = getchar();
+		if (ope[1] != '\n') {
+			printf("error4");
+			break;
+		}
+		//scanf("%s", &ope);
+		len1 = check(num1);//检查,返回位数
+		len2 = check(num2);
+		if (len1 == 0 || len2 == 0) {
+			printf("error1\n");
+			continue;
+		}
+		switch (ope[0])
+		{
 			case '+': {
-				add(num1, num2, result, len1, len2);
-				printf("%s\n", result);
-				//free;
-				break;
+				if (num1sign == 1 && num2sign == 1) {
+					add(num1, num2, result, len1, len2);
+					printf("%s\n", result);
+					break;
+				}
+				if (num1sign == 1 && num2sign == 0) {
+					sub(num1, num2, result, len1, len2);
+					printf("%s\n", result);
+					break;
+				}
+				if (num1sign == 0 && num2sign == 1) {
+					sub(num2, num1, result, len2, len1);
+					printf("%s\n", result);
+					break;
+				}
+				if (num1sign == 0 && num2sign == 0) {
+					add(num1, num2, result, len1, len2);
+					printf("-%s\n", result);
+					break;
+				}
 			}
 			case '-': {
 				if (len2 == 1 && num2[0] == '0') {
 					printf("error2\n");
 					break;
 				}
-				sub(num1, num2, result, len1, len2);
-				printf("%s\n", result);
-				break;
+				if (num1sign == 1 && num2sign == 1) {
+					sub(num1, num2, result, len1, len2);
+					printf("%s\n", result);
+					break;
+				}
+				if (num1sign == 1 && num2sign == 0) {
+					add(num1, num2, result, len1, len2);
+					printf("%s\n", result);
+					break;
+				}
+				if (num1sign == 0 && num2sign == 1) {
+					add(num1, num2, result, len1, len2);
+					printf("-%s\n", result);
+					break;
+				}
+				if (num1sign == 0 && num2sign == 0) {
+					sub(num2, num1, result, len2, len1);
+					printf("%s\n", result);
+					break;
+				}
 			}
 			case '*': {
-				mul(num1, num2, lresult, len1, len2);
-				printf("%s\n", lresult);
-				break;
+				if ((num1sign == 1 && num2sign == 1)||(num1sign==0&&num2sign==0)) {
+					mul(num1, num2, lresult, len1, len2);
+					printf("%s\n", lresult);
+					break;
+				}
+				if ((num1sign == 1 && num2sign == 0)||(num1sign==0&&num2sign==1)) {
+					mul(num1, num2, lresult, len1, len2);
+					printf("-%s\n", lresult);
+					break;
+				}
 			}
 			case '/': {
 				div(num1, num2, result, remainder, len1, len2);
@@ -325,7 +424,9 @@ void main()//主函数
 				break;
 			}
 			default:printf("error3\n");
-			}
+		}
+		num1sign = 1;
+		num2sign = 1;
 	}
 	system("pause");
 }
